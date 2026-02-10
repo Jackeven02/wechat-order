@@ -1,0 +1,57 @@
+<!-- pages/order-detail/order-detail.wxml -->
+<view class="container">
+  <view class="order-detail" wx:if="{{order}}">
+    <!-- 订单状态 -->
+    <view class="status-banner {{getStatusClass(order.status)}}">
+      <text class="status-text">{{getStatusText(order.status)}}</text>
+    </view>
+
+    <!-- 订单信息 -->
+    <view class="order-info">
+      <view class="info-item">
+        <text class="info-label">订单号：</text>
+        <text class="info-value">{{order.orderNumber}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">下单时间：</text>
+        <text class="info-value">{{order.createTime}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">桌台号：</text>
+        <text class="info-value">{{order.tableNumber}}</text>
+      </view>
+    </view>
+
+    <!-- 商品列表 -->
+    <view class="dishes-section">
+      <view class="section-title">商品详情</view>
+      <view class="dishes-list">
+        <block wx:for="{{order.items}}" wx:key="dishId">
+          <view class="dish-item">
+            <text class="dish-name">{{item.name}}</text>
+            <view class="dish-detail">
+              <text class="dish-price">¥{{item.formattedPrice}}</text>
+              <text class="dish-quantity">×{{item.quantity}}</text>
+              <text class="dish-subtotal">¥{{item.formattedSubtotal}}</text>
+            </view>
+            <text class="dish-remark" wx:if="{{item.remark}}">备注：{{item.remark}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 订单金额 -->
+    <view class="amount-section">
+      <view class="amount-item">
+        <text class="amount-label">商品总额</text>
+        <text class="amount-value">¥{{order.formattedTotalAmount}}</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="action-btn contact" bindtap="onContactService">联系客服</button>
+      <button class="action-btn order-again" bindtap="onOrderAgain">再来一单</button>
+    </view>
+  </view>
+</view>

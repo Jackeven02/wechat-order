@@ -1,0 +1,102 @@
+<!-- pages/table/table.wxml -->
+<view class="container">
+  <view class="content">
+    <!-- 未绑定状态 -->
+    <view class="unbind-section" wx:if="{{!tableInfo}}">
+      <view class="header">
+        <image class="header-icon" src="https://picsum.photos/40/40?random=15"></image>
+        <text class="header-title">桌台绑定</text>
+        <text class="header-desc">请扫描桌台二维码开始点餐</text>
+      </view>
+
+      <view class="scan-area">
+        <view class="scan-placeholder">
+          <image class="scan-icon" src="https://picsum.photos/100/100?random=16"></image>
+          <text class="scan-text">将二维码放入框内</text>
+        </view>
+        
+        <button 
+          class="scan-btn primary" 
+          bindtap="onScanTable"
+          loading="{{isScanning}}"
+          disabled="{{isScanning}}">
+          {{isScanning ? '扫描中...' : '扫码绑定桌台'}}
+        </button>
+        
+        <button class="scan-btn secondary" bindtap="onManualInput">
+          手动输入桌台号
+        </button>
+      </view>
+
+      <view class="tips">
+        <view class="tip-item">
+          <text class="tip-icon">💡</text>
+          <text class="tip-text">每张桌子都有专属二维码</text>
+        </view>
+        <view class="tip-item">
+          <text class="tip-icon">📱</text>
+          <text class="tip-text">绑定后可随时查看订单状态</text>
+        </view>
+        <view class="tip-item">
+          <text class="tip-icon">🔄</text>
+          <text class="tip-text">更换桌台需先解绑当前桌台</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 已绑定状态 -->
+    <view class="bind-section" wx:else>
+      <view class="success-card">
+        <image class="success-icon" src="https://picsum.photos/80/80?random=17"></image>
+        <text class="success-title">绑定成功</text>
+        <view class="table-info-card">
+          <view class="info-row">
+            <text class="info-label">桌台编号：</text>
+            <text class="info-value">{{tableInfo.tableNumber}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">绑定时间：</text>
+            <text class="info-value">{{tableInfo.bindTime}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">桌台状态：</text>
+            <text class="info-value status-text {{tableInfo.status === 'available' ? 'status-green' : 'status-orange'}}">
+              {{tableInfo.status === 'available' ? '空闲' : tableInfo.status === 'ordering' ? '点餐中' : '用餐中'}}
+            </text>
+          </view>
+        </view>
+      </view>
+
+      <view class="action-buttons">
+        <button class="action-btn primary" bindtap="onConfirmBind">
+          开始点餐
+        </button>
+        <button class="action-btn secondary" bindtap="onUnbindTable">
+          解绑桌台
+        </button>
+      </view>
+
+      <view class="notice">
+        <text class="notice-icon">⚠️</text>
+        <text class="notice-text">离开时请及时解绑桌台</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 绑定确认弹窗 -->
+  <view class="modal" wx:if="{{showBindConfirm}}" bindtap="onCancelBind">
+    <view class="modal-content" bindtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">绑定成功</text>
+      </view>
+      <view class="modal-body">
+        <text class="modal-text">您已成功绑定桌台 {{tableInfo.tableNumber}}</text>
+        <text class="modal-text">现在可以开始点餐了</text>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn cancel" bindtap="onCancelBind">取消</button>
+        <button class="modal-btn confirm" bindtap="onConfirmBind">开始点餐</button>
+      </view>
+    </view>
+  </view>
+</view>

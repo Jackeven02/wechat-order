@@ -1,0 +1,67 @@
+<!-- pages/member/member.wxml -->
+<view class="container">
+  <!-- 未登录状态 -->
+  <view class="unlogin-state" wx:if="{{!isLogin}}">
+    <image class="avatar" src="https://picsum.photos/100/100?random=21"></image>
+    <text class="nickname">请登录</text>
+    <button class="login-btn" bindtap="onGoToLogin">立即登录</button>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view class="member-content" wx:else>
+    <!-- 用户信息 -->
+    <view class="user-info">
+      <image class="avatar" src="{{userInfo.avatarUrl || 'https://picsum.photos/100/100?random=22'}}"></image>
+      <view class="user-details">
+        <text class="nickname">{{userInfo.nickName || '用户'}}</text>
+        <text class="member-level">普通会员</text>
+      </view>
+    </view>
+
+    <!-- 会员权益 -->
+    <view class="benefits-section">
+      <view class="section-title">会员权益</view>
+      <view class="benefits-grid">
+        <view class="benefit-item" bindtap="onViewPoints">
+          <text class="benefit-value">{{formattedPoints}}</text>
+          <text class="benefit-label">我的积分</text>
+        </view>
+        <view class="benefit-item" bindtap="onViewBalance">
+          <text class="benefit-value">¥{{formattedBalance}}</text>
+          <text class="benefit-label">账户余额</text>
+        </view>
+        <view class="benefit-item" bindtap="onMyCoupons">
+          <text class="benefit-value">{{formattedCoupons}}</text>
+          <text class="benefit-label">优惠券</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 功能菜单 -->
+    <view class="menu-section">
+      <view class="menu-item" bindtap="onMyOrders">
+        <view class="menu-left">
+          <image class="menu-icon" src="https://picsum.photos/30/30?random=23"></image>
+          <text class="menu-text">我的订单</text>
+        </view>
+        <image class="arrow" src="https://picsum.photos/20/20?random=24"></image>
+      </view>
+      
+      <view class="menu-item" bindtap="onMyCoupons">
+        <view class="menu-left">
+          <image class="menu-icon" src="https://picsum.photos/30/30?random=25"></image>
+          <text class="menu-text">优惠券</text>
+        </view>
+        <image class="arrow" src="https://picsum.photos/20/20?random=24"></image>
+      </view>
+      
+      <view class="menu-item" bindtap="onViewPoints">
+        <view class="menu-left">
+          <image class="menu-icon" src="https://picsum.photos/30/30?random=26"></image>
+          <text class="menu-text">积分商城</text>
+        </view>
+        <image class="arrow" src="https://picsum.photos/20/20?random=24"></image>
+      </view>
+    </view>
+  </view>
+</view>

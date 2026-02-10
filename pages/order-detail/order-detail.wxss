@@ -1,0 +1,178 @@
+/* pages/order-detail/order-detail.wxss */
+.container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20rpx;
+}
+
+.order-detail {
+  background: white;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+/* 订单状态横幅 */
+.status-banner {
+  padding: 40rpx;
+  text-align: center;
+  color: white;
+}
+
+.status-banner.pending {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+}
+
+.status-banner.processing {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+}
+
+.status-banner.completed {
+  background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+}
+
+.status-banner.cancelled {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+}
+
+.status-text {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+/* 订单信息 */
+.order-info {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.info-item {
+  display: flex;
+  margin-bottom: 25rpx;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-size: 28rpx;
+  color: #666;
+  width: 160rpx;
+}
+
+.info-value {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+}
+
+/* 商品列表 */
+.dishes-section {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+.dish-item {
+  padding: 20rpx 0;
+  border-bottom: 1rpx dashed #eee;
+}
+
+.dish-item:last-child {
+  border-bottom: none;
+}
+
+.dish-name {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 15rpx;
+}
+
+.dish-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.dish-price {
+  font-size: 26rpx;
+  color: #ff6b35;
+}
+
+.dish-quantity {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.dish-subtotal {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.dish-remark {
+  font-size: 24rpx;
+  color: #999;
+  background: #f8f9fa;
+  padding: 10rpx 15rpx;
+  border-radius: 10rpx;
+}
+
+/* 订单金额 */
+.amount-section {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.amount-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.amount-label {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.amount-value {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #ff6b35;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  padding: 30rpx;
+  display: flex;
+  gap: 20rpx;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 25rpx;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  border: 1rpx solid #ddd;
+}
+
+.action-btn.contact {
+  background: white;
+  color: #667eea;
+  border-color: #667eea;
+}
+
+.action-btn.order-again {
+  background: #667eea;
+  color: white;
+  border: none;
+}

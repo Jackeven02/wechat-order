@@ -1,0 +1,89 @@
+<!-- pages/index/index.wxml -->
+<view class="container">
+  <!-- 顶部状态栏 -->
+  <view class="status-bar">
+    <view class="welcome">
+      <text class="welcome-text">欢迎来到{{storeInfo.name}}</text>
+    </view>
+    
+    <!-- 桌台信息 -->
+    <view class="table-info" wx:if="{{tableInfo}}" bindtap="onTableInfoTap">
+      <view class="table-header">
+        <text class="table-label">当前桌台：</text>
+        <text class="table-number">{{tableInfo.tableNumber}}</text>
+      </view>
+      <view class="table-status">
+        <text class="status-text {{tableInfo.status === 'available' ? 'status-available' : 'status-occupied'}}">
+          {{tableInfo.status === 'available' ? '空闲' : tableInfo.status === 'ordering' ? '点餐中' : '用餐中'}}
+        </text>
+      </view>
+    </view>
+    
+    <!-- 未绑定桌台提示 -->
+    <view class="no-table" wx:else>
+      <text class="no-table-text">请先扫码绑定桌台</text>
+      <button class="scan-btn" bindtap="onQuickActionTap" data-url="/pages/table/table">
+        立即扫码
+      </button>
+    </view>
+  </view>
+
+  <!-- 轮播图 -->
+  <swiper class="banner-swiper" indicator-dots autoplay interval="5000" duration="1000">
+    <block wx:for="{{banners}}" wx:key="id">
+      <swiper-item>
+        <view class="banner-item" bindtap="onBannerTap" data-index="{{index}}">
+          <image class="banner-image" src="{{item.image}}" mode="aspectFill"></image>
+          <text class="banner-title">{{item.title}}</text>
+        </view>
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <!-- 快捷操作 -->
+  <view class="quick-actions">
+    <view class="section-title">
+      <text class="title-text">快捷服务</text>
+    </view>
+    <view class="actions-grid">
+      <block wx:for="{{quickActions}}" wx:key="id">
+        <view class="action-item" bindtap="onQuickActionTap" data-url="{{item.url}}">
+          <image class="action-icon" src="{{item.icon}}"></image>
+          <text class="action-text">{{item.text}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 公告栏 -->
+  <view class="notice-board">
+    <view class="notice-header">
+      <image class="notice-icon" src="https://picsum.photos/30/30?random=8"></image>
+      <text class="notice-label">公告</text>
+    </view>
+    <view class="notice-content" bindtap="onNoticeTap">
+      <text class="notice-text">{{notices[0]}}</text>
+    </view>
+  </view>
+
+  <!-- 门店信息 -->
+  <view class="store-info">
+    <view class="section-title">
+      <text class="title-text">门店信息</text>
+    </view>
+    <view class="info-content" bindtap="onStoreInfoTap">
+      <view class="info-item">
+        <text class="info-label">地址：</text>
+        <text class="info-value">{{storeInfo.address}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">电话：</text>
+        <text class="info-value">{{storeInfo.phone}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">营业时间：</text>
+        <text class="info-value">{{storeInfo.businessHours}}</text>
+      </view>
+    </view>
+  </view>
+</view>

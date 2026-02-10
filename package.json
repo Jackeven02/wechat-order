@@ -1,0 +1,15 @@
+{
+  "name": "restaurant-mini-program",
+  "version": "1.0.0",
+  "description": "企业商用微信餐饮堂食点餐小程序",
+  "main": "app.js",
+  "scripts": {
+    "dev": "echo '请在微信开发者工具中打开项目目录'",
+    "test": "echo '运行测试'",
+    "build": "echo '构建项目'"
+  },
+  "author": "Developer",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -1,0 +1,113 @@
+<!-- pages/menu/menu.wxml -->
+<view class="container">
+  <!-- 顶部搜索栏 -->
+  <view class="search-bar">
+    <view class="search-container" wx:if="{{showSearch}}">
+      <input 
+        class="search-input" 
+        placeholder="搜索菜品名称" 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        focus="{{showSearch}}"
+      />
+      <button class="search-cancel" bindtap="toggleSearch">取消</button>
+    </view>
+    <view class="search-placeholder" wx:else bindtap="toggleSearch">
+      <text class="search-text">🔍 搜索菜品</text>
+    </view>
+  </view>
+
+  <!-- 主要内容区域 -->
+  <view class="main-content">
+    <!-- 分类侧边栏 -->
+    <scroll-view class="category-sidebar" scroll-y>
+      <block wx:for="{{categories}}" wx:key="id">
+        <view 
+          class="category-item {{activeCategory === index ? 'active' : ''}}" 
+          bindtap="onCategorySelect" 
+          data-index="{{index}}" 
+          data-id="{{item.id}}">
+          <image class="category-icon" src="{{item.icon}}" mode="aspectFit"></image>
+          <text class="category-name">{{item.name}}</text>
+          <text class="category-count" wx:if="{{item.dishCount}}">{{item.dishCount}}</text>
+        </view>
+      </block>
+    </scroll-view>
+
+    <!-- 菜品主区域 -->
+    <scroll-view class="dish-main" scroll-y>
+      <!-- 加载状态 -->
+      <view class="loading" wx:if="{{isLoading}}">
+        <view class="spinner"></view>
+        <text>加载中...</text>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty-state" wx:elif="{{filteredDishes.length === 0}}">
+        <image class="empty-icon" src="https://picsum.photos/150/150?random=12"></image>
+        <text class="empty-text">暂无相关菜品</text>
+      </view>
+
+      <!-- 菜品列表 -->
+      <view class="dish-list" wx:else>
+        <block wx:for="{{filteredDishes}}" wx:key="id">
+          <view class="dish-item" bindtap="onDishDetail" data-dish="{{item}}">
+            <!-- 菜品图片 -->
+            <view class="dish-image-container">
+              <image class="dish-image" src="{{item.image}}" mode="aspectFill"></image>
+              <view class="dish-badge" wx:if="{{item.isNew}}">新品</view>
+              <view class="dish-badge hot" wx:elif="{{item.isHot}}">热销</view>
+              <view class="dish-badge recommend" wx:elif="{{item.isRecommend}}">推荐</view>
+            </view>
+
+            <!-- 菜品信息 -->
+            <view class="dish-info">
+              <view class="dish-header">
+                <text class="dish-name">{{item.name}}</text>
+                <text class="dish-price">¥{{item.formattedPrice}}</text>
+              </view>
+              
+              <text class="dish-description">{{item.description}}</text>
+              
+              <view class="dish-meta">
+                <text class="dish-sales">已售 {{item.salesCount}}</text>
+                <text class="dish-rating" wx:if="{{item.rating}}">⭐ {{item.rating}}</text>
+                <text class="dish-stock {{item.stock <= 5 ? 'low-stock' : ''}}" wx:if="{{item.stock <= 10}}">
+                  {{item.stock > 0 ? '仅剩' + item.stock + '份' : '已售罄'}}
+                </text>
+              </view>
+            </view>
+
+            <!-- 操作按钮 -->
+            <view class="dish-actions">
+              <button 
+                class="add-btn {{item.stock <= 0 ? 'disabled' : ''}}" 
+                bindtap="onAddToCart" 
+                data-dish="{{item}}"
+                hover-class="add-btn-hover">
+                +
+              </button>
+            </view>
+          </view>
+        </block>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 购物车悬浮按钮 -->
+  <view class="cart-float" bindtap="onCartPreview">
+    <image class="cart-icon" src="https://picsum.photos/60/60?random=13"></image>
+    <text class="cart-count" wx:if="{{cart.length > 0}}">{{cart.length}}</text>
+  </view>
+
+  <!-- 底部购物车概览 -->
+  <view class="cart-summary" wx:if="{{cart.length > 0}}" bindtap="onCartPreview">
+    <view class="cart-info">
+      <text class="cart-total">共{{cart.length}}件商品</text>
+      <text class="cart-amount">¥{{formattedCartTotal}}</text>
+    </view>
+    <view class="cart-action">
+      <text class="view-cart">查看购物车</text>
+    </view>
+  </view>
+</view>

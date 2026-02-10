@@ -1,0 +1,80 @@
+<!-- pages/order/confirm.wxml -->
+<view class="container">
+  <view class="order-confirm-content">
+    <!-- 桌台信息 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">桌台信息</text>
+        <text class="change-btn" bindtap="onChangeTable">修改</text>
+      </view>
+      <view class="table-info">
+        <text class="table-label">桌台编号：</text>
+        <text class="table-number">{{orderData.tableNumber || '未绑定'}}</text>
+      </view>
+    </view>
+
+    <!-- 商品清单 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">商品清单</text>
+        <text class="item-count">{{orderData.items.length || 0}}件商品</text>
+      </view>
+      
+      <view class="items-list">
+        <block wx:for="{{orderData.items}}" wx:key="dishId">
+          <view class="item-card">
+            <view class="item-info">
+              <text class="item-name">{{item.name}}</text>
+              <text class="item-remark" wx:if="{{item.remark}}">备注：{{item.remark}}</text>
+            </view>
+            <view class="item-price-info">
+              <text class="item-price">¥{{item.formattedPrice}}</text>
+              <text class="item-quantity">×{{item.quantity}}</text>
+              <text class="item-subtotal">¥{{item.formattedSubtotal}}</text>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 订单总额 -->
+    <view class="section total-section">
+      <view class="total-row">
+        <text class="total-label">商品总额</text>
+        <text class="total-amount">¥{{orderData.formattedTotalAmount}}</text>
+      </view>
+      <view class="total-row grand-total">
+        <text class="total-label">应付金额</text>
+        <text class="total-amount grand-amount">¥{{orderData.formattedTotalAmount}}</text>
+      </view>
+    </view>
+
+    <!-- 备注 -->
+    <view class="section" wx:if="{{orderData.remark}}">
+      <view class="section-header">
+        <text class="section-title">订单备注</text>
+      </view>
+      <view class="remark-content">
+        <text>{{orderData.remark}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="total-info">
+      <text class="pay-label">应付：</text>
+      <text class="pay-amount">¥{{orderData.formattedTotalAmount}}</text>
+    </view>
+    <view class="action-buttons">
+      <button class="action-btn secondary" bindtap="onBackToCart">返回修改</button>
+      <button 
+        class="action-btn primary" 
+        bindtap="onSubmitOrder"
+        loading="{{submitting}}"
+        disabled="{{submitting}}">
+        {{submitting ? '提交中...' : '确认下单'}}
+      </button>
+    </view>
+  </view>
+</view>

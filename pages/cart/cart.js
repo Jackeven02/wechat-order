@@ -80,23 +80,16 @@ Page({
     this.setData({
       totalPrice: totalPrice,
       totalCount: totalCount,
-      // 预处理购物车数据，添加格式化的价格
-      cart: this.data.cart.map(item => ({
-        ...item,
-        formattedPrice: (item.price / 100).toFixed(2),
-        formattedSubtotal: ((item.price * item.quantity) / 100).toFixed(2)
-      })),
-      // 格式化总价
       formattedTotalPrice: (totalPrice / 100).toFixed(2)
     });
   },
 
-  // 选择/取消选择商品
-  onItemSelect: function(e) {
+  // 选择商品
+  onSelectItem: function(e) {
     const { dishid } = e.currentTarget.dataset;
-    let selectedItems = [...this.data.selectedItems];
-    
+    const selectedItems = this.data.selectedItems;
     const index = selectedItems.indexOf(dishid);
+    
     if (index > -1) {
       selectedItems.splice(index, 1);
     } else {
@@ -109,92 +102,56 @@ Page({
 
   // 全选/取消全选
   onSelectAll: function() {
-    if (this.data.selectedItems.length === this.data.cart.length) {
+    const allSelected = this.data.selectedItems.length === this.data.cart.length;
+    
+    if (allSelected) {
       this.setData({ selectedItems: [] });
     } else {
-      const allIds = this.data.cart.map(item => item.dishId);
-      this.setData({ selectedItems: allIds });
+      const allItemIds = this.data.cart.map(item => item.dishId);
+      this.setData({ selectedItems: allItemIds });
     }
+    
     this.calculateTotal();
   },
 
-  // 增加数量
-  onIncrease: function(e) {
-    const { index } = e.currentTarget.dataset;
-    let cart = [...this.data.cart];
+  // 修改数量
+  onChangeQuantity: function(e) {
+    const { dishid, type } = e.currentTarget.dataset;
+    const cart = this.data.cart;
+    const itemIndex = cart.findIndex(item => item.dishId === dishid);
     
-    // 检查库存
-    if (cart[index].quantity < cart[index].stock) {
-      cart[index].quantity += 1;
-      this.updateCart(cart);
-    } else {
-      wx.showToast({
-        title: '已达最大库存',
-        icon: 'none'
-      });
-    }
-  },
-
-  // 减少数量
-  onDecrease: function(e) {
-    const { index } = e.currentTarget.dataset;
-    let cart = [...this.data.cart];
-    
-    if (cart[index].quantity > 1) {
-      cart[index].quantity -= 1;
-      this.updateCart(cart);
-    } else {
-      // 数量为1时询问是否删除
-      wx.showModal({
-        title: '删除商品',
-        content: '确定要删除这件商品吗？',
-        success: (res) => {
-          if (res.confirm) {
-            this.removeItem(index);
-          }
-        }
-      });
+    if (itemIndex > -1) {
+      if (type === 'add') {
+        cart[itemIndex].quantity += 1;
+      } else if (type === 'reduce' && cart[itemIndex].quantity > 1) {
+        cart[itemIndex].quantity -= 1;
+      }
+      
+      const app = getApp();
+      app.globalData.cart = cart;
+      wx.setStorageSync('cart', cart);
+      
+      this.setData({ cart: cart });
+      this.calculateTotal();
     }
   },
 
   // 删除商品
-  removeItem: function(index) {
-    let cart = [...this.data.cart];
-    const removedItem = cart.splice(index, 1)[0];
+  onDeleteItem: function(e) {
+    const { dishid } = e.currentTarget.dataset;
+    const cart = this.data.cart.filter(item => item.dishId !== dishid);
+    const selectedItems = this.data.selectedItems.filter(id => id !== dishid);
     
-    // 更新选中状态
-    let selectedItems = [...this.data.selectedItems];
-    const selectedIndex = selectedItems.indexOf(removedItem.dishId);
-    if (selectedIndex > -1) {
-      selectedItems.splice(selectedIndex, 1);
-    }
+    const app = getApp();
+    app.globalData.cart = cart;
+    wx.setStorageSync('cart', cart);
     
     this.setData({
       cart: cart,
       selectedItems: selectedItems
     });
     
-    this.updateGlobalCart(cart);
     this.calculateTotal();
-    
-    wx.showToast({
-      title: '删除成功',
-      icon: 'success'
-    });
-  },
-
-  // 更新购物车
-  updateCart: function(cart) {
-    this.setData({ cart: cart });
-    this.updateGlobalCart(cart);
-    this.calculateTotal();
-  },
-
-  // 更新全局购物车
-  updateGlobalCart: function(cart) {
-    const app = getApp();
-    app.globalData.cart = cart;
-    wx.setStorageSync('cart', cart);
   },
 
   // 清空购物车
@@ -212,12 +169,8 @@ Page({
             cart: [],
             selectedItems: [],
             totalPrice: 0,
-            totalCount: 0
-          });
-          
-          wx.showToast({
-            title: '购物车已清空',
-            icon: 'success'
+            totalCount: 0,
+            formattedTotalPrice: '0.00'
           });
         }
       }
@@ -226,12 +179,12 @@ Page({
 
   // 添加备注
   onAddRemark: function(e) {
-    const { index } = e.currentTarget.dataset;
-    const item = this.data.cart[index];
+    const { dishid } = e.currentTarget.dataset;
+    const item = this.data.cart.find(item => item.dishId === dishid);
     
     this.setData({
       showRemarkModal: true,
-      currentRemarkItem: index,
+      currentRemarkItem: dishid,
       remarkContent: item.remark || ''
     });
   },
@@ -243,24 +196,24 @@ Page({
 
   // 确认备注
   onConfirmRemark: function() {
-    const index = this.data.currentRemarkItem;
-    let cart = [...this.data.cart];
+    const { currentRemarkItem, remarkContent } = this.data;
+    const cart = this.data.cart;
+    const itemIndex = cart.findIndex(item => item.dishId === currentRemarkItem);
     
-    cart[index].remark = this.data.remarkContent;
-    
-    this.setData({
-      cart: cart,
-      showRemarkModal: false,
-      currentRemarkItem: null,
-      remarkContent: ''
-    });
-    
-    this.updateGlobalCart(cart);
-    
-    wx.showToast({
-      title: '备注已保存',
-      icon: 'success'
-    });
+    if (itemIndex > -1) {
+      cart[itemIndex].remark = remarkContent;
+      
+      const app = getApp();
+      app.globalData.cart = cart;
+      wx.setStorageSync('cart', cart);
+      
+      this.setData({
+        cart: cart,
+        showRemarkModal: false,
+        currentRemarkItem: null,
+        remarkContent: ''
+      });
+    }
   },
 
   // 取消备注
@@ -272,9 +225,22 @@ Page({
     });
   },
 
+  // 阻止冒泡
+  stopPropagation: function(e) {
+    // 阻止事件冒泡
+  },
+
   // 提交订单
   onSubmitOrder: function() {
-    // 检查桌台绑定
+    // 检查登录状态
+    if (!this.data.isLogin) {
+      wx.navigateTo({
+        url: '/pages/login/login'
+      });
+      return;
+    }
+    
+    // 检查桌台信息
     if (!this.data.tableInfo) {
       wx.showToast({
         title: '请先绑定桌台',
@@ -286,27 +252,11 @@ Page({
       return;
     }
     
-    // 检查是否选择了商品
+    // 检查是否有选中商品
     if (this.data.selectedItems.length === 0) {
       wx.showToast({
-        title: '请选择要下单的商品',
+        title: '请选择商品',
         icon: 'none'
-      });
-      return;
-    }
-    
-    // 检查登录状态
-    if (!this.data.isLogin) {
-      wx.showModal({
-        title: '温馨提示',
-        content: '下单需要登录，是否前往登录？',
-        success: (res) => {
-          if (res.confirm) {
-            wx.navigateTo({
-              url: '/pages/login/login'
-            });
-          }
-        }
       });
       return;
     }
@@ -327,7 +277,8 @@ Page({
         remark: item.remark
       })),
       totalAmount: this.data.totalPrice,
-      remark: '' // 可以添加全局订单备注
+      remark: '', // 可以添加全局订单备注
+      status: 'pending' // 明确设置订单状态为待制作
     };
     
     // 跳转到确认订单页面

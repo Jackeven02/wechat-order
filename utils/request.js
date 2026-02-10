@@ -5,6 +5,20 @@ const MOCK_DATA = require('../mock/mock-data.js'); // 引入模拟数据
 // 存储新创建的订单数据
 const createdOrders = {};
 
+// 兼容微信小程序的URL参数解析函数
+function parseQueryString(queryString) {
+  const params = {};
+  if (queryString) {
+    queryString.split('&').forEach(pair => {
+      const [key, value] = pair.split('=');
+      if (key && value !== undefined) {
+        params[decodeURIComponent(key)] = decodeURIComponent(value);
+      }
+    });
+  }
+  return params;
+}
+
 class Request {
   constructor() {
     this.baseURL = BASE_URL;
@@ -129,7 +143,55 @@ class Request {
           } else if (url.includes('/menu/dishes')) {
             result = { code: 0, data: MOCK_DATA.dishes };
           } else if (url.includes('/orders/list')) {
-            result = { code: 0, data: MOCK_DATA.orders };
+            console.log('=== 订单列表调试信息 ===');
+            console.log('请求URL:', url);
+            
+            // 合并模拟数据和用户创建的订单
+            const allOrders = [...MOCK_DATA.orders];
+            
+            // 将用户创建的订单添加到列表中
+            Object.values(createdOrders).forEach(order => {
+              // 检查是否已存在（避免重复）
+              if (!allOrders.find(o => o.id == order.id)) {
+                allOrders.push(order);
+              }
+            });
+            
+            console.log('所有订单数据:', allOrders);
+            
+            // 获取查询参数并筛选（使用兼容微信小程序的解析方式）
+            const queryString = url.split('?')[1] || '';
+            const params = parseQueryString(queryString);
+            const statusFilter = params.status;
+            
+            console.log('解析的参数:', params);
+            console.log('状态筛选条件:', statusFilter);
+            
+            // 状态筛选 - 修复：只有当statusFilter存在且非空时才进行筛选
+            let finalOrders = allOrders;
+            if (statusFilter && statusFilter !== '') {
+              const statusMap = {
+                '待制作': 'pending',
+                '制作中': 'processing',
+                '已完成': 'completed'
+              };
+              const backendStatus = statusMap[statusFilter] || statusFilter;
+              console.log('映射后的后端状态:', backendStatus);
+              
+              finalOrders = allOrders.filter(order => {
+                const match = order.status === backendStatus;
+                console.log(`订单 ${order.orderNumber || order.id} 状态 ${order.status} 是否匹配 ${backendStatus}:`, match);
+                return match;
+              });
+            } else {
+              console.log('不进行状态筛选，返回所有订单');
+            }
+            
+            console.log('最终返回订单数量:', finalOrders.length);
+            console.log('最终返回订单:', finalOrders);
+            console.log('========================');
+            
+            result = { code: 0, data: finalOrders };
           } else if (url.includes('/orders/detail')) {
             const orderId = url.split('/').pop();
             // 先在模拟数据中查找
@@ -214,11 +276,20 @@ class Request {
   }
 
   get(url, data = {}, options = {}) {
+    // 将data转换为查询参数并附加到URL上
+    let fullUrl = url;
+    if (Object.keys(data).length > 0) {
+      const queryParams = Object.keys(data)
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+        .join('&');
+      fullUrl = url.includes('?') ? `${url}&${queryParams}` : `${url}?${queryParams}`;
+    }
+    
     return this.request({
       ...options,
       method: 'GET',
-      url,
-      data
+      url: fullUrl,
+      data: {}
     });
   }
 

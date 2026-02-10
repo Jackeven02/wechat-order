@@ -115,55 +115,6 @@ module.exports = {
     }
   ],
 
-  // 订单数据
-  orders: [
-    {
-      id: 1,
-      orderNumber: 'ORD20240101001',
-      tableNumber: 'A01',
-      status: 'completed',
-      totalAmount: 6800,
-      createTime: '2024-01-01 12:30:00',
-      items: [
-        {
-          dishId: 1,
-          name: '宫保鸡丁',
-          price: 2800,
-          quantity: 1,
-          remark: '少辣'
-        },
-        {
-          dishId: 4,
-          name: '扬州炒饭',
-          price: 1500,
-          quantity: 2,
-          remark: ''
-        }
-      ]
-    },
-    {
-      id: 2,
-      orderNumber: 'ORD20240101002',
-      tableNumber: 'B03',
-      status: 'processing',
-      totalAmount: 3000,
-      createTime: '2024-01-01 13:15:00',
-      items: [
-        {
-          dishId: 2,
-          name: '麻婆豆腐',
-          price: 1800,
-          quantity: 1,
-          remark: '微辣'
-        },
-        {
-          dishId: 3,
-          name: '拍黄瓜',
-          price: 1200,
-          quantity: 1,
-          remark: '多蒜'
-        }
-      ]
-    }
-  ]
+  // 订单数据（清空示例数据）
+  orders: []
 };

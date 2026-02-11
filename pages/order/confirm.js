@@ -9,6 +9,22 @@ Page({
 
   onLoad: function(options) {
     this.initPage(options);
+    // 检查支付支持情况
+    this.checkPaymentSupport();
+  },
+
+  // 检查支付支持情况
+  checkPaymentSupport: function() {
+    const payment = require('../../utils/payment.js');
+    const supportInfo = payment.checkPaymentSupport();
+    
+    if (!supportInfo.supported) {
+      wx.showToast({
+        title: supportInfo.message,
+        icon: 'none',
+        duration: 3000
+      });
+    }
   },
 
   onShow: function() {
@@ -81,34 +97,67 @@ Page({
     this.setData({ submitting: true });
 
     const request = require('../../utils/request.js');
+    const payment = require('../../utils/payment.js');
     
+    // 1. 先创建订单
     request.post('/orders/create', this.data.orderData, { loading: true })
     .then(res => {
       console.log('订单创建成功', res);
       
-      // 清空购物车
+      // 2. 发起支付
+      const orderInfo = {
+        orderId: res.data.orderId,
+        amount: this.data.orderData.totalAmount,
+        description: '餐厅点餐订单'
+      };
+      
+      return payment.pay(orderInfo);
+    })
+    .then(paymentResult => {
+      console.log('支付成功', paymentResult);
+      
+      // 3. 支付成功后清空购物车
       const app = getApp();
       app.globalData.cart = [];
       wx.setStorageSync('cart', []);
       
       wx.showToast({
-        title: '下单成功',
+        title: '支付成功',
         icon: 'success'
       });
       
-      // 跳转到订单详情或订单列表
+      // 4. 跳转到订单详情
       setTimeout(() => {
         wx.redirectTo({
-          url: `/pages/order-detail/order-detail?id=${res.data.orderId}`
+          url: `/pages/order-detail/order-detail?id=${this.data.orderData.orderId || 'mock_order_1'}`
         });
       }, 1500);
     })
     .catch(err => {
-      console.error('订单提交失败', err);
-      wx.showToast({
-        title: err.message || '下单失败',
-        icon: 'none'
-      });
+      this.setData({ submitting: false });
+      
+      if (err.success === false) {
+        // 支付失败
+        wx.showToast({
+          title: err.message || '支付失败',
+          icon: 'none'
+        });
+        
+        // 支付失败时的处理逻辑
+        if (err.message === '用户取消支付') {
+          // 用户取消支付，可以保留在当前页面
+          console.log('用户取消支付');
+        } else {
+          // 其他支付失败，可能需要更新订单状态为待支付
+          console.log('支付失败，需要更新订单状态');
+        }
+      } else {
+        // 订单创建失败
+        wx.showToast({
+          title: err.message || '下单失败',
+          icon: 'none'
+        });
+      }
     })
     .finally(() => {
       this.setData({ submitting: false });

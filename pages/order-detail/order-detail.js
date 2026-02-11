@@ -24,6 +24,8 @@ Page({
         const formattedOrder = {
           ...order,
           formattedTotalAmount: (order.totalAmount / 100).toFixed(2),
+          statusText: this.getStatusText(order.status),
+          statusClass: this.getStatusClass(order.status),
           items: order.items.map(item => ({
             ...item,
             formattedPrice: (item.price / 100).toFixed(2),

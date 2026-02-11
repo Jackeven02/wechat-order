@@ -46,14 +46,55 @@ App({
   // 初始化系统
   initSystem: function() {
     // 初始化购物车
-    const cart = wx.getStorageSync('cart') || [];
+    let cart = wx.getStorageSync('cart') || [];
+    
+    // 如果购物车为空，添加默认商品
+    if (cart.length === 0) {
+      cart = [
+        {
+          dishId: 1,
+          name: '宫保鸡丁',
+          price: 2800, // 单位：分
+          formattedPrice: '28.00',
+          quantity: 1,
+          image: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300&h=300&fit=crop&q=80',
+          remark: ''
+        },
+        {
+          dishId: 2,
+          name: '麻婆豆腐',
+          price: 1800, // 单位：分
+          formattedPrice: '18.00',
+          quantity: 1,
+          image: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300&h=300&fit=crop&q=80',
+          remark: ''
+        },
+        {
+          dishId: 3,
+          name: '拍黄瓜',
+          price: 1200, // 单位：分
+          formattedPrice: '12.00',
+          quantity: 2,
+          image: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300&h=300&fit=crop&q=80',
+          remark: ''
+        }
+      ];
+      wx.setStorageSync('cart', cart);
+    }
+    
     this.globalData.cart = cart;
     
     // 初始化桌台信息
-    const tableInfo = wx.getStorageSync('tableInfo');
-    if (tableInfo) {
-      this.globalData.tableInfo = tableInfo;
+    let tableInfo = wx.getStorageSync('tableInfo');
+    if (!tableInfo) {
+      tableInfo = {
+        tableId: 1,
+        tableNumber: 'A01',
+        status: 'available'
+      };
+      wx.setStorageSync('tableInfo', tableInfo);
     }
+    this.globalData.tableInfo = tableInfo;
   },
 
   // 获取用户信息

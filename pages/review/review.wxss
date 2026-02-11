@@ -1,0 +1,249 @@
+/* pages/review/review.wxss */
+.container {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf9 100%);
+  min-height: 100vh;
+  padding: 30rpx;
+}
+
+.order-info {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20rpx);
+  border-radius: 25rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.08);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.order-number {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.order-time {
+  font-size: 26rpx;
+  color: #888;
+}
+
+.order-items {
+  max-height: 200rpx;
+  overflow-y: auto;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  padding: 15rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.item-image {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 15rpx;
+  margin-right: 20rpx;
+  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.1);
+}
+
+.item-name {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.item-price {
+  font-size: 28rpx;
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+.rating-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20rpx);
+  border-radius: 25rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.08);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.rating-stars {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+
+.star {
+  font-size: 50rpx;
+  margin: 0 10rpx;
+  color: #ddd;
+  transition: all 0.3s ease;
+}
+
+.star.active {
+  color: #ffd700;
+  transform: scale(1.1);
+}
+
+.rating-label {
+  text-align: center;
+  font-size: 28rpx;
+  color: #667eea;
+  font-weight: 600;
+  margin-top: 10rpx;
+}
+
+.comment-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20rpx);
+  border-radius: 25rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.08);
+}
+
+.comment-textarea {
+  width: 100%;
+  height: 200rpx;
+  background: #f8f9ff;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 15rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.comment-textarea:focus {
+  border-color: #667eea;
+  outline: none;
+}
+
+.image-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20rpx);
+  border-radius: 25rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.08);
+}
+
+.image-upload {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.upload-btn {
+  width: 150rpx;
+  height: 150rpx;
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  border: 2rpx dashed #667eea;
+  border-radius: 15rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #667eea;
+}
+
+.upload-btn:active {
+  background: linear-gradient(135deg, #e0e4ff 0%, #d0d8ff 100%);
+}
+
+.upload-icon {
+  font-size: 50rpx;
+  margin-bottom: 10rpx;
+}
+
+.uploaded-image {
+  position: relative;
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 15rpx;
+  overflow: hidden;
+  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.1);
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 10rpx;
+  right: 10rpx;
+  width: 40rpx;
+  height: 40rpx;
+  background: rgba(255, 71, 87, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.delete-btn:active {
+  background: rgba(255, 71, 87, 1);
+}
+
+.submit-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20rpx);
+  padding: 30rpx;
+  box-shadow: 0 -10rpx 30rpx rgba(0,0,0,0.1);
+  border-top: 1rpx solid #eee;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 100rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 50rpx;
+  color: white;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 10rpx 25rpx rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.submit-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 5rpx 15rpx rgba(102, 126, 234, 0.4);
+}
+
+.submit-btn:disabled {
+  background: #cccccc;
+  box-shadow: none;
+  transform: none;
+}

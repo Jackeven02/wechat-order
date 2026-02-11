@@ -2,8 +2,8 @@
 <view class="container">
   <view class="order-detail" wx:if="{{order}}">
     <!-- 订单状态 -->
-    <view class="status-banner {{getStatusClass(order.status)}}">
-      <text class="status-text">{{getStatusText(order.status)}}</text>
+    <view class="status-banner {{order.statusClass}}">
+      <text class="status-text">{{order.statusText}}</text>
     </view>
 
     <!-- 订单信息 -->

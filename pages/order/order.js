@@ -51,6 +51,9 @@ Page({
       const formattedOrders = rawOrders.map(order => ({
         ...order,
         formattedTotalAmount: (order.totalAmount / 100).toFixed(2),
+        statusText: this.getStatusText(order.status),
+        statusClass: this.getStatusClass(order.status),
+        canCancel: this.canCancelOrder(order.status),
         items: order.items.map(item => ({
           ...item,
           formattedPrice: (item.price / 100).toFixed(2)
@@ -119,6 +122,33 @@ Page({
     wx.switchTab({
       url: '/pages/menu/menu'
     });
+  },
+
+  // 获取状态文本
+  getStatusText: function(status) {
+    const statusMap = {
+      'pending': '待制作',
+      'processing': '制作中',
+      'completed': '已完成',
+      'cancelled': '已取消'
+    };
+    return statusMap[status] || '未知状态';
+  },
+
+  // 获取状态样式类
+  getStatusClass: function(status) {
+    const classMap = {
+      'pending': 'status-pending',
+      'processing': 'status-processing',
+      'completed': 'status-completed',
+      'cancelled': 'status-cancelled'
+    };
+    return classMap[status] || '';
+  },
+
+  // 判断是否可以取消订单
+  canCancelOrder: function(status) {
+    return status === 'pending';
   },
 
   // 下拉刷新

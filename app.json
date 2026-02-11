@@ -9,6 +9,8 @@
     "pages/login/login",
     "pages/table/table",
     "pages/order-detail/order-detail",
+    "pages/review/review",
+    "pages/feedback/feedback",
     "pages/merchant/login/login",
     "pages/merchant/dashboard/dashboard",
     "pages/merchant/order/order",

@@ -1,0 +1,76 @@
+<!-- pages/feedback/feedback.wxml -->
+<view class="container">
+  <!-- 反馈类型选择 -->
+  <view class="type-section">
+    <view class="section-title">请选择反馈类型</view>
+    <view class="type-grid">
+      <block wx:for="{{feedbackTypes}}" wx:key="id">
+        <view 
+          class="type-item {{selectedType === item.id ? 'selected' : ''}}" 
+          bindtap="onSelectType" 
+          data-type="{{item.id}}"
+        >
+          <text class="type-icon">{{item.icon}}</text>
+          <text class="type-name">{{item.name}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 联系方式 -->
+  <view class="contact-section">
+    <view class="section-title">联系方式（可选）</view>
+    <input 
+      class="contact-input" 
+      placeholder="请输入手机号/微信号，方便我们联系您"
+      value="{{contact}}"
+      bindinput="onContactInput"
+    />
+  </view>
+
+  <!-- 反馈内容 -->
+  <view class="content-section">
+    <view class="section-title">详细描述</view>
+    <textarea 
+      class="content-textarea" 
+      placeholder="请详细描述您遇到的问题或建议..."
+      value="{{content}}"
+      bindinput="onContentInput"
+      maxlength="1000"
+    ></textarea>
+  </view>
+
+  <!-- 图片上传 -->
+  <view class="image-section">
+    <view class="section-title">上传相关图片（可选）</view>
+    <view class="image-upload">
+      <block wx:for="{{images}}" wx:key="index">
+        <view class="uploaded-image">
+          <image 
+            class="image-preview" 
+            src="{{item}}" 
+            mode="aspectFill"
+            bindtap="onPreviewImage"
+            data-src="{{item}}"
+          ></image>
+          <view class="delete-btn" bindtap="onDeleteImage" data-index="{{index}}">×</view>
+        </view>
+      </block>
+      <view class="upload-btn" wx:if="{{images.length < 3}}" bindtap="onChooseImage">
+        <text class="upload-icon">+</text>
+        <text>添加图片</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button 
+      class="submit-btn" 
+      bindtap="onSubmitFeedback" 
+      disabled="{{isSubmitting}}"
+    >
+      {{isSubmitting ? '提交中...' : '提交反馈'}}
+    </button>
+  </view>
+</view>
